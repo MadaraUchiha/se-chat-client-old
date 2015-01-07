@@ -1,0 +1,9 @@
+{
+  "name": "se-chat-client",
+  "version": "0.0.1",
+  "dependencies": {
+    "bluebird": "^2.6.2",
+    "request": "^2.51.0",
+    "websocket": "^1.0.14"
+  }
+}
