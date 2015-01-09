@@ -4,11 +4,22 @@
 
 var app = require('express')(),
     bodyParser = require('body-parser'),
-    Authenticator = require('./client/authentication/chatAuthenticator');
+    Client = require('./client/Client');
 
-var authenticator = new Authenticator();
 app.use(bodyParser.json());
-app.post('/login', authenticator.serverCallback());
+app.post('/login', Client.serverCallback());
+app.use(function Errors(err, request, response, next) {
+    var HttpError = require('./errors/HttpError');
+    if (!(err instanceof  HttpError)) {
+        next(err);
+    }
+    response.status(err.statusCode).json({
+        statusCode: err.statusCode,
+        description: HttpError.descriptionMap[err.statusCode],
+        extended: err.message,
+        extra: err.extra
+    });
+});
 
 var server = app.listen(8080, function serverReady() {
     var host = server.address().address;
