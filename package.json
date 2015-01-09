@@ -10,5 +10,9 @@
     "request": "^2.51.0",
     "tough-cookie": "^0.12.1",
     "websocket": "^1.0.14"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-6to5": "^2.0.0"
   }
 }

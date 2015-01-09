@@ -15,7 +15,7 @@ var serversMap = {
 };
 
 /**
- * The Authenticator object is responsible for authenticating the chat Client with the Stack Exchange chat server.
+ * The Authenticator object is responsible for authenticating the chat Client with the Stack Exchange chat botServer.
  * @param {Request} request Request instance with cookies enabled.
  * @param cookieJar
  * @constructor
