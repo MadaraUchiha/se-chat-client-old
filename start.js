@@ -4,9 +4,11 @@
 
 var app = require('express')(),
     bodyParser = require('body-parser'),
-    chatAuthenticator = require('./client/authentication/chatAuthenticator');
+    Authenticator = require('./client/authentication/chatAuthenticator');
+
+var authenticator = new Authenticator();
 app.use(bodyParser.json());
-app.post('/login', chatAuthenticator.serverCallback());
+app.post('/login', authenticator.serverCallback());
 
 var server = app.listen(8080, function serverReady() {
     var host = server.address().address;

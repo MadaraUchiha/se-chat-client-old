@@ -5,8 +5,10 @@
   "dependencies": {
     "bluebird": "^2.6.2",
     "body-parser": "^1.10.1",
+    "cheerio": "^0.18.0",
     "express": "^4.10.7",
     "request": "^2.51.0",
+    "tough-cookie": "^0.12.1",
     "websocket": "^1.0.14"
   }
 }
