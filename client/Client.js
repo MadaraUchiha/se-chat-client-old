@@ -3,7 +3,8 @@
 'use strict';
 
 var HttpError = require('../errors/HttpError'),
-    Promise = require('bluebird');
+    Promise = require('bluebird'),
+    request = require('request');
 
 function Client(server, defaultRoom) {
     this.server = server;
@@ -13,14 +14,14 @@ function Client(server, defaultRoom) {
 
     this.rooms = [];
 
-    this.request = require('request');
-    this.request = Promise.promisifyAll(this.request.defaults({jar: this.request.jar()}));
+    this.cookieJar = request.jar();
+    this.request = Promise.promisify(request.defaults({jar: this.cookieJar}));
 }
 
 Client.prototype.authenticate = function(email, password) {
     var Authenticator = require('./authentication/chatAuthenticator');
     //I'm not sure I need to keep the authenticator, but I might so meh.
-    this.authenticator = new Authenticator(this.request);
+    this.authenticator = new Authenticator(this.request, this.cookieJar);
 
     return this.authenticator.login(email, password, this.server);
 };

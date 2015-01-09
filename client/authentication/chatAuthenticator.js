@@ -17,10 +17,12 @@ var serversMap = {
 /**
  * The Authenticator object is responsible for authenticating the chat Client with the Stack Exchange chat server.
  * @param {Request} request Request instance with cookies enabled.
+ * @param cookieJar
  * @constructor
  */
-function Authenticator(request) {
+function Authenticator(request, cookieJar) {
     this.request = request;
+    this.cookieJar = cookieJar;
 }
 
 Authenticator.prototype.login = function (email, password, server) {
@@ -72,7 +74,7 @@ Authenticator.prototype.loginSO = function (server) {
 Authenticator.prototype.initLogin = function (getURL, formURL, formObj) {
     console.log('Getting', getURL);
 
-    return this.request.getAsync({ url: getURL })
+    return this.request({ url: getURL })
         .spread(function (res, body) {
             console.log('Got url');
             var $ = cheerio.load(body);
@@ -88,13 +90,14 @@ Authenticator.prototype.auth = function ($, formURL, formObj) {
 
     console.log('Submitting to', formURL);
 
-    return this.request.postAsync({
+    return this.request({
+        method: 'post',
         followAllRedirects: true,
         url: formURL,
         form: formObj
     }).spread(function (response, body) {
         if (response.statusCode > 399) {
-            throw new Error("Bad status code! " + response.statusCode + " when trying to post to " + formURL);
+            throw new HttpError("Bad status code! " + response.statusCode + " when trying to post to " + formURL, 500, null);
         }
         return cheerio.load(body);
     });
