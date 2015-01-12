@@ -1,12 +1,17 @@
 // Created by madara all rights reserved.
 
-'use strict';
-
 var gulp = require('gulp');
-var to5 = require('gulp-6to5');
+var jshint = require('gulp-jshint');
+var stylish = require('jshint-stylish');
 
-gulp.task('default', function () {
+gulp.task('lint', function() {
     return gulp.src('src/**/*')
-        .pipe(to5())
-        .pipe(gulp.dest('dist'));
+    .pipe(jshint({
+            'node': true,
+            'esnext': true,
+            'quotmark': true
+        }))
+        .pipe(jshint.reporter(stylish));
 });
+
+gulp.task('default', ['lint'], function () {});
