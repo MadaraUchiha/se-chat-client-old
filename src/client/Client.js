@@ -1,10 +1,11 @@
 // Created by madara all rights reserved.
 
-'use strict';
+import HttpError from '../errors/HttpError.js';
+import Promise from 'bluebird';
+import request from 'request';
+import Authenticator from './authentication/chatAuthenticator';
 
-var HttpError = require('../errors/HttpError'),
-    Promise = require('bluebird'),
-    request = require('request');
+var coroutine = Promise.coroutine;
 
 function Client(server, defaultRoom) {
     this.server = server;
@@ -19,10 +20,8 @@ function Client(server, defaultRoom) {
 }
 
 Client.prototype.authenticate = function(email, password) {
-    var Authenticator = require('./authentication/chatAuthenticator');
     //I'm not sure I need to keep the authenticator, but I might so meh.
     this.authenticator = new Authenticator(this.request, this.cookieJar);
-
     return this.authenticator.login(email, password, this.server);
 };
 
@@ -37,7 +36,7 @@ Client.serverCallback = function() {
                 requiredFields.filter(not(presentIn(request.body)))
             );
         }
-        var client = new Client(request.body.server, request.body["default-room"]);
+        var client = new Client(request.body.server, request.body['default-room']);
         client.authenticate(request.body.email, request.body.password, request.body.server)
             .then(function loginSuccessful() {
                 Client.clientPool.push(client);
@@ -61,4 +60,4 @@ var not = function (callback) {
 
 Client.clientPool = [];
 
-module.exports = Client;
+export default Client;

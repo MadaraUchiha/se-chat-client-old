@@ -1,17 +1,14 @@
 // Created by madara all rights reserved.
 
-'use strict';
-
-var Promise = require('bluebird'),
-    cheerio = require('cheerio'),
-    HttpError = require('../../errors/HttpError');
-
+import Promise from 'bluebird';
+import cheerio from 'cheerio';
+import HttpError from '../../errors/HttpError.js';
 
 Promise.longStackTraces();
 
 var serversMap = {
-    stackoverflow: {formPage: 'http://stackoverflow.com/users/login', formSubmit: "http://stackoverflow.com/users/login"},
-    stackexchange: {formPage: 'http://stackexchange.com/users/login', formSubmit: "http://stackexchange.com/affiliate/form/login/submit"}
+    stackoverflow: {formPage: 'http://stackoverflow.com/users/login', formSubmit: 'http://stackoverflow.com/users/login'},
+    stackexchange: {formPage: 'http://stackexchange.com/users/login', formSubmit: 'http://stackexchange.com/affiliate/form/login/submit'}
 };
 
 /**
@@ -25,63 +22,54 @@ function Authenticator(request, cookieJar) {
     this.cookieJar = cookieJar;
 }
 
-Authenticator.prototype.login = function (email, password, server) {
-    return this.validateDetails(server)
-        .then(this.loginSEOpenID(email, password))
-        .then(this.loginSO(server));
-};
+Authenticator.prototype.login = Promise.coroutine(function*(email, password, server) {
+    this.validateDetails(server);
+    yield this.loginSEOpenID(email, password);
+    console.log('Logged into StackExchange openId');
+    yield this.loginSO(server);
+    console.log('Logged into chat', server);
+
+    return this.request;
+});
 
 Authenticator.prototype.validateDetails = function (server) {
-    return new Promise(function (resolve, reject) {
-        if (!serversMap[server]) {
-            reject(new HttpError(
-                'Unsupported server ' + server + '. Please review the list of supported servers in the extra field.',
-                400,
-                Object.keys(serversMap)
-            ));
-            return;
-        }
-        resolve();
-    });
+    if (!serversMap[server]) {
+        throw new HttpError(
+            'Unsupported server ' + server + '. Please review the list of supported servers in the extra field.',
+            400,
+            Object.keys(serversMap)
+        );
+    }
 };
 
 Authenticator.prototype.loginSEOpenID = function (email, password) {
-    return function() {
-        return this.initLogin(
-            'https://openid.stackexchange.com/account/login',
-            'https://openid.stackexchange.com/account/login/submit/',
-            { email: email, password: password })
-            .then(function () {
-                console.log('Logged in to StackExchange OpenId');
-            });
-    }.bind(this);
+    return this.initLogin(
+        'https://openid.stackexchange.com/account/login',
+        'https://openid.stackexchange.com/account/login/submit/',
+        { email: email, password: password });
 };
 
 Authenticator.prototype.loginSO = function (server) {
-    return function () {
-        return this.initLogin(
-            serversMap[server].formPage,
-            serversMap[server].formSubmit,
-            { openid_identifier: 'https://openid.stackexchange.com' })
-            .then(function () {
-                console.log('Logged in to Chat', server);
-            });
-    }.bind(this);
+    return this.initLogin(
+        serversMap[server].formPage,
+        serversMap[server].formSubmit,
+        { openid_identifier: 'https://openid.stackexchange.com' });
 };
 
 // Similarly, the initLogin function here visits the login page, gets the fkey, and passes it all to auth, which does the authentication
 // using a POST request with all the details
 Authenticator.prototype.initLogin = function (getURL, formURL, formObj) {
+    var self = this;
     console.log('Getting', getURL);
 
     return this.request({ url: getURL })
-        .spread(function (res, body) {
+        .spread((res, body) => {
             console.log('Got url');
             var $ = cheerio.load(body);
             console.log('Parsed response');
 
-            return this.auth($, formURL, formObj);
-        }.bind(this));
+            return self.auth($, formURL, formObj);
+        });
 };
 
 // Note that the auth function does append the fkey to the formObj sent in the POST request
@@ -95,12 +83,12 @@ Authenticator.prototype.auth = function ($, formURL, formObj) {
         followAllRedirects: true,
         url: formURL,
         form: formObj
-    }).spread(function (response, body) {
+    }).spread((response, body) => {
         if (response.statusCode > 399) {
-            throw new HttpError("Bad status code! " + response.statusCode + " when trying to post to " + formURL, 500, null);
+            throw new HttpError('Bad status code! ' + response.statusCode + ' when trying to post to ' + formURL, 500, null);
         }
         return cheerio.load(body);
     });
 };
 
-module.exports = Authenticator;
+export default Authenticator;

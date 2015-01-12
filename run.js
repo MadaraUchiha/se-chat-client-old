@@ -1,7 +1,5 @@
 // Created by madara all rights reserved.
 
-'use strict';
-
-var botServer = require('./dist/main');
-
-botServer();
+require('6to5/register');
+//import botServer from './src/main';
+require('./src/main');

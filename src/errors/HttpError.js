@@ -1,7 +1,5 @@
 // Created by madara all rights reserved.
 
-'use strict';
-
 /**
  * Error Object for responding with error Http Statuses.
  * @param message - Error message. Will map to the extended key in the error object in the response.
@@ -23,4 +21,4 @@ HttpError.descriptionMap = {
     500: "Server Error"
 };
 
-module.exports = HttpError;
+export default HttpError;
