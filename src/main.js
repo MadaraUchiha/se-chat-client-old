@@ -13,12 +13,14 @@ app.use(function ErrorHandler(err, request, response, next) {
     if (!(err instanceof  HttpError)) {
         next(err);
     }
-    response.status(err.statusCode).json({
+    var errorResponse = {
         statusCode: err.statusCode,
         description: HttpError.descriptionMap[err.statusCode],
         extended: err.message,
         extra: err.extra
-    });
+    };
+    console.error(errorResponse);
+    response.status(err.statusCode).json(errorResponse);
 });
 
 var server = app.listen(5050, function serverReady() {
