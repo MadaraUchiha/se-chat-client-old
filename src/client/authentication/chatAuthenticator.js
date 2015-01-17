@@ -45,7 +45,7 @@ Authenticator.prototype.validateDetails = function (server) {
 Authenticator.prototype.loginSEOpenID = function (email, password) {
     return this.initLogin(
         'https://openid.stackexchange.com/account/login',
-        'https://openid.stackexchange.com/account/login/submit/',
+        'https://openid.stackexchange.com/account/login/submit',
         { email: email, password: password });
 };
 
@@ -63,7 +63,7 @@ Authenticator.prototype.initLogin = function (getURL, formURL, formObj) {
     console.log('Getting', getURL);
 
     return this.request({ url: getURL })
-        .spread((res, body) => {
+        .then(([res, body]) => {
             console.log('Got url');
             var $ = cheerio.load(body);
             console.log('Parsed response');
@@ -83,7 +83,7 @@ Authenticator.prototype.auth = function ($, formURL, formObj) {
         followAllRedirects: true,
         url: formURL,
         form: formObj
-    }).spread((response, body) => {
+    }).then(([response, body]) => {
         if (response.statusCode > 399) {
             throw new HttpError('Bad status code! ' + response.statusCode + ' when trying to post to ' + formURL, 500, null);
         }

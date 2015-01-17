@@ -46,17 +46,8 @@ Client.serverCallback = function() {
     }.bind(this);
 };
 
-var presentIn = function (inWhat) {
-    return function presentInBody(field) {
-        return Boolean(inWhat[field]);
-    };
-};
-
-var not = function (callback) {
-    return function () {
-        return !callback.apply(this, arguments);
-    };
-};
+var presentIn = inWhat => field => Boolean(inWhat[field]);
+var not = (fn) => (...args) => !fn(...args);
 
 Client.clientPool = [];
 
