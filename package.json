@@ -3,18 +3,18 @@
   "version": "0.0.1",
   "repository": "https://github.com/MadaraUchiha/se-chat-client",
   "dependencies": {
-    "bluebird": "^2.6.2",
-    "body-parser": "^1.10.1",
-    "cheerio": "^0.18.0",
-    "express": "^4.10.7",
-    "request": "^2.51.0",
-    "tough-cookie": "^0.12.1",
-    "websocket": "^1.0.14"
+    "bluebird": "^2.9.14",
+    "body-parser": "^1.12.2",
+    "cheerio": "^0.19.0",
+    "express": "^5.0.0-alpha.1",
+    "request": "2.53.0",
+    "tough-cookie": "0.12.1",
+    "websocket": "^1.0.18"
   },
   "devDependencies": {
     "babel": "^4.7.16",
-    "gulp": "^3.8.10",
-    "gulp-jshint": "^1.9.0",
-    "jshint-stylish": "^1.0.0"
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.0.1",
+    "jshint-stylish": "^1.0.1"
   }
 }
