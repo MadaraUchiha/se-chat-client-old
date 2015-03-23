@@ -5,7 +5,7 @@ var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 
 gulp.task('lint', function() {
-    return gulp.src('src/**/*')
+    return gulp.src('src/**/*.js')
     .pipe(jshint({
             'node': true,
             'esnext': true,
