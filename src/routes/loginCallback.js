@@ -23,8 +23,10 @@ export default (request, response, next) => {
         );
     }
     let {server, email, password, defaultRoom} = request.body;
+    console.info(`All validations pass! Let's see if there's an existing client at ${server}#${email}...`);
     let existingClient = Client.clientPool[server + '#' + email];
     if (existingClient) {
+        console.info(`Yup! Let me send you the existing client...`);
         response.json({
             httpStatus: 200,
             description: 'OK',
@@ -33,7 +35,9 @@ export default (request, response, next) => {
         return;
     }
     let authenticator = authFactory.make(server);
+    console.info(`Nope! Let's make one!`);
     let client = new Client(authenticator, defaultRoom);
+    console.info(`Client succesfully created. Authenticating...`);
     client.authenticate(email, password)
         .then(function loginSuccessful(url) {
             console.log(url);
