@@ -11,7 +11,7 @@ var app = express();
 app.use(bodyParser.json());
 app.post('/login', loginCallback);
 app.use(function HttpErrorHandler(err, request, response, next) {
-    if (!(err instanceof  HttpError)) {
+    if (!(err instanceof HttpError)) {
         next(err);
         return;
     }
@@ -21,7 +21,7 @@ app.use(function HttpErrorHandler(err, request, response, next) {
         extended: err.message,
         extra: err.extra
     };
-    console.error(errorResponse);
+    console.error(errorResponse, err.stack);
     response.status(err.statusCode).json(errorResponse);
 });
 app.use(function GeneralErrorHandler(err, request, response, next) {
@@ -31,7 +31,7 @@ app.use(function GeneralErrorHandler(err, request, response, next) {
         extended: err.message,
         extra: null
     };
-    console.error(errorResponse);
+    console.error(errorResponse, err.stack);
     response.status(500).json(errorResponse);
 });
 
