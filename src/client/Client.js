@@ -7,8 +7,8 @@ import Authenticator from './authentication/chatAuthenticator';
 
 var coroutine = Promise.coroutine;
 
-function Client(server, defaultRoom) {
-    this.server = server;
+function Client(authenticator, defaultRoom) {
+    this.authenticator = authenticator;
     this.defaultRoom = defaultRoom;
 
     this.fkey = '';
@@ -21,8 +21,7 @@ function Client(server, defaultRoom) {
 
 Client.prototype.authenticate = function(email, password) {
     //I'm not sure I need to keep the authenticator, but I might so meh.
-    this.authenticator = new Authenticator(this.request, this.cookieJar);
-    return this.authenticator.login(email, password, this.server);
+    return this.authenticator.authenticate(email, password, this.server);
 };
 
 Client.clientPool = [];
