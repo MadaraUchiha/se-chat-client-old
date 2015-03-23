@@ -1,6 +1,6 @@
 // Created by madara all rights reserved.
 
-export default class Authenticator {
+export class Authenticator {
     constructor() {
         throw new Error('Authenticator is an abstract class, it cannot be instantiated.');
     }

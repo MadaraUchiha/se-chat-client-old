@@ -1,6 +1,6 @@
 // Created by madara all rights reserved.
 
-import Authenticator from './Authenticator.js';
+import {Authenticator} from './Authenticator.js';
 
 export default class MetaStackExchangeAuthenticator extends Authenticator {
     constructor() {

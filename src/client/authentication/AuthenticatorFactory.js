@@ -1,8 +1,8 @@
 // Created by madara all rights reserved.
 
-import StackOverflowAuthenticator from './StackOverflowAuthenticator.js';
-import StackExchangeAuthenticator from './StackExchangeAuthenticator.js';
-import MetaStackExchangeAuthenticator from './MetaStackExchangeAuthenticator.js';
+import {StackOverflowAuthenticator} from './StackOverflowAuthenticator.js';
+import {StackExchangeAuthenticator} from './StackExchangeAuthenticator.js';
+import {MetaStackExchangeAuthenticator} from './MetaStackExchangeAuthenticator.js';
 
 import HttpError from '../../errors/HttpError.js';
 

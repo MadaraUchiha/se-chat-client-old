@@ -1,6 +1,6 @@
 // Created by madara all rights reserved.
 
-import Authenticator from './Authenticator.js';
+import {Authenticator} from './Authenticator';
 import Promise from 'bluebird';
 import cheerio from 'cheerio';
 
