@@ -9,7 +9,6 @@ import ClientPool from '../client/ClientPool.js';
 let cookieJar = httpRequest.jar();
 httpRequest = Promise.promisify(httpRequest.defaults({jar: cookieJar}));
 
-var authFactory = new AuthenticatorFactory(httpRequest);
 var pool = new ClientPool();
 
 export default (request, response, next) => {
@@ -34,8 +33,8 @@ export default (request, response, next) => {
         });
         return;
     }
-    let authenticator = authFactory.make(server);
     console.info(`Nope! Let's make one!`);
+    let authenticator = AuthenticatorFactory.make(server);
     let client = new Client(authenticator, defaultRoom);
     console.info(`Client succesfully created. Authenticating...`);
     client.authenticate(email, password)

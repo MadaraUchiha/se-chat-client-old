@@ -3,13 +3,15 @@
 import {Authenticator} from './Authenticator';
 import Promise from 'bluebird';
 import cheerio from 'cheerio';
+import {HttpClient} from '../../utils/HttpClient';
 
-export default class StackExchangeAuthenticator extends Authenticator {
+export class StackExchangeAuthenticator extends Authenticator {
+    static inject() { return [HttpClient]; }
     /**
-     * @param request Promisified, cookie enabled request instance.
+     * @param  {HttpClient} httpClient Promisified, cookie enabled request instance.
      */
-    constructor(request) {
-        this.request = request;
+    constructor(httpClient) {
+        this.http = httpClient;
     }
 
     authenticate(email, password) {
@@ -26,7 +28,7 @@ export default class StackExchangeAuthenticator extends Authenticator {
     }
 
     getBody(url) {
-        return this.request(url)
+        return this.http.get(url)
             .then(([res, body]) => body);
     }
 }

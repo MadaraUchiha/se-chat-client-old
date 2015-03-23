@@ -6,12 +6,10 @@ import {MetaStackExchangeAuthenticator} from './MetaStackExchangeAuthenticator.j
 
 import HttpError from '../../errors/HttpError.js';
 
-export default class AuthenticatorFactory {
-    constructor(request) {
-        this.request = request;
-    }
+import {Chusha} from 'chusha';
 
-    make(server) {
+export default class AuthenticatorFactory {
+    static make(server) {
         let dispatchTable = {
             so: StackOverflowAuthenticator,
             se: StackExchangeAuthenticator,
@@ -25,6 +23,6 @@ export default class AuthenticatorFactory {
                 Object.keys(dispatchTable)
             );
         }
-        return new dispatchTable[server](this.request);
+        return Chusha.get(dispatchTable[server]);
     }
 }

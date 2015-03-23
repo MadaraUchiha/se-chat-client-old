@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "babel": "^4.7.16",
+    "chusha": "^0.2.4",
     "gulp": "^3.8.11",
     "gulp-jshint": "^1.0.1",
     "jshint-stylish": "^1.0.1"
