@@ -25,30 +25,6 @@ Client.prototype.authenticate = function(email, password) {
     return this.authenticator.login(email, password, this.server);
 };
 
-Client.serverCallback = function() {
-    return function (request, response, next) {
-        var requiredFields = [ 'email', 'password', 'server', 'default-room' ];
-        var allFieldsPresent = requiredFields.every(presentIn(request.body));
-        if (!allFieldsPresent) {
-            throw new HttpError(
-                'Request must include the following missing parameters (see extra)',
-                400,
-                requiredFields.filter(not(presentIn(request.body)))
-            );
-        }
-        var client = new Client(request.body.server, request.body['default-room']);
-        client.authenticate(request.body.email, request.body.password, request.body.server)
-            .then(function loginSuccessful() {
-                Client.clientPool.push(client);
-                response.send(request.body);
-            }.bind(this))
-            .catch(next);
-    }.bind(this);
-};
-
-var presentIn = inWhat => field => Boolean(inWhat[field]);
-var not = (fn) => (...args) => !fn(...args);
-
 Client.clientPool = [];
 
 export default Client;

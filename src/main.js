@@ -3,12 +3,13 @@
 import Client from './client/Client.js';
 import express from 'express';
 import bodyParser from 'body-parser';
+import loginCallback from './routes/loginCallback';
 import HttpError from './errors/HttpError.js';
 
 var app = express();
 
 app.use(bodyParser.json());
-app.post('/login', Client.serverCallback());
+app.post('/login', loginCallback);
 app.use(function HttpErrorHandler(err, request, response, next) {
     if (!(err instanceof  HttpError)) {
         next(err);
