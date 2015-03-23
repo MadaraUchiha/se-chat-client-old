@@ -3,15 +3,16 @@
 import Client from './client/Client.js';
 import express from 'express';
 import bodyParser from 'body-parser';
+import HttpError from './errors/HttpError.js';
 
 var app = express();
 
 app.use(bodyParser.json());
 app.post('/login', Client.serverCallback());
-app.use(function ErrorHandler(err, request, response, next) {
-    import HttpError from './errors/HttpError.js';
+app.use(function HttpErrorHandler(err, request, response, next) {
     if (!(err instanceof  HttpError)) {
         next(err);
+        return;
     }
     var errorResponse = {
         statusCode: err.statusCode,
@@ -21,6 +22,16 @@ app.use(function ErrorHandler(err, request, response, next) {
     };
     console.error(errorResponse);
     response.status(err.statusCode).json(errorResponse);
+});
+app.use(function GeneralErrorHandler(err, request, response, next) {
+    let errorResponse = {
+        statusCode: 500,
+        description: 'Internal Server Error',
+        extended: err.message,
+        extra: null
+    };
+    console.error(errorResponse);
+    response.status(500).json(errorResponse);
 });
 
 var server = app.listen(5050, function serverReady() {
