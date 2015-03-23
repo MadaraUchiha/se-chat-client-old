@@ -1,5 +1,5 @@
 // Created by madara all rights reserved.
 
-require('6to5/register');
+require('babel/register');
 //import botServer from './src/main';
 require('./src/main');
